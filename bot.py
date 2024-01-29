@@ -1,7 +1,4 @@
-import subprocess 
-
+import subprocess
+ 
 def run():
-    print("Hola Mundo")
-
-# Llama a la función run
-run()
+    subprocess.run(["echo", "Hello world"], check=True, text=True)
