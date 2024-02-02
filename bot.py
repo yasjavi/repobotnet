@@ -4,7 +4,7 @@ import requests
 import base64
 
 # Authenticate with GitHub using a personal access token
-g = github.Github("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")
+g = github.Github("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")
 
 # Get the repository
 repo = g.get_user().get_repo("repobotnet")
